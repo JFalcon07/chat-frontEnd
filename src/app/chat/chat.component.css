@@ -1,0 +1,35 @@
+.chat-layout {
+    display: flex;
+    flex-flow: column;
+    margin: 0;
+}
+.messages-container {
+    flex: 1 1 60vh;
+}
+.message-input-container {
+    flex: 0 1  !important;
+    height: 40px;
+    display: flex;
+    padding: 15px;
+}
+.message-item {
+    width: auto !important;
+    display: inline-block;
+    justify-content: space-between;
+}
+.message-input{
+    flex: 1 0 75%;
+}
+.message-send{
+    flex: 0 0 50px !important;
+}
+.host {
+    max-width: 45%;
+    margin-left: auto !important;
+}
+.host > mat-chip {
+    background-color: lightgreen;
+}
+.other{
+    max-width: 45%;
+}

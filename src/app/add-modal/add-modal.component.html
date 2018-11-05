@@ -1,0 +1,20 @@
+<div class="modal-container">
+  <h1 mat-dialog-title>Add contact</h1>
+  <div mat-dialog-content>
+    <p>Search user</p>
+    <mat-form-field>
+      <input matInput type="text" [formControl]="search" cdkFocusInitial>
+    </mat-form-field>
+    <button mat-button  (click)="getUsers(search.value)" >Search</button>
+    <p *ngIf="found === false"> No user was found</p>
+    <mat-radio-group class="user-list" *ngIf="users" [(ngModel)]="favoriteSeason">
+        <mat-radio-button *ngFor="let user of users" class="user-list-item" [value]="user.email">
+            {{user.username}}
+        </mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div mat-dialog-actions class="modal-buttons">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button (click)="addUser(favoriteSeason)" >Add</button>
+  </div>
+</div>

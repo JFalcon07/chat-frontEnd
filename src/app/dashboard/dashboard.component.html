@@ -1,0 +1,23 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="bar">
+  <h1>Some random chat</h1>
+  <button mat-icon-button class="user-avatar" [matMenuTriggerFor]="options">
+      <img src="../../assets/User.png" alt="User picture" width="70px" >
+      <mat-menu #options="matMenu">
+          <a href="/settings" mat-menu-item>Settings</a>
+          <a href="/login" mat-menu-item>Logout</a>
+      </mat-menu>
+  </button>
+</div>
+<span [ngSwitch]="">
+<div *ngSwitchCase="true">
+
+</div>
+<div class="dashboard-container" *ngSwitchDefault>
+  <mat-card class="sidebar-container sidebar">
+    <app-sidebar></app-sidebar>
+  </mat-card>
+  <mat-card class="chat-container">
+    <app-chat></app-chat>
+  </mat-card>
+</div>

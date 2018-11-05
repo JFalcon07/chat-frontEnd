@@ -1,0 +1,54 @@
+<mat-card class="card-container">
+    <form class="form-container" [formGroup]="registerForm">
+      <div class="inputform">
+        
+        <mat-form-field>
+          <input matInput placeholder="Email" formControlName="email" required>
+          <mat-error *ngIf="f.email.hasError('email') && !f.email.hasError('required')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="f.email.hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Username" formControlName="username" required>
+            <mat-error *ngIf="f.username.hasError('required')">
+              Username is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="password" placeholder="Password" formControlName="password" required>
+          <mat-error *ngIf="f.password.hasError('required')">
+            Password is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="f.password.hasError('minlength')">
+            Password need to be a least 4 characters
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="password" placeholder="Confirm Password" formControlName="passwordConfirm" required>
+          <mat-error *ngIf="f.passwordConfirm.hasError('required')">
+              Password confirmation is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="registerForm.hasError('noMatch') && !f.passwordConfirm.hasError('required')">
+            Password confirmation does not match
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Language" formControlName="language">
+            <mat-option *ngFor="let language of languages" [value]="language.value">
+              {{language.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="container-center">
+        <button mat-flat-button (click)='register()'>Register</button>
+      </div>
+  </form>
+</mat-card>

@@ -1,0 +1,24 @@
+.bar{
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+.user-avatar{
+    width: 70px;
+    height: 70px;
+}
+.dashboard-container{
+    display: flex;
+    flex-direction: row;
+}
+.sidebar-container {
+    flex: .1 0 250px;
+}
+.chat-container {
+    flex: 1 1 75%;
+    padding: 0px;
+}
+.sidebar {
+    height: 82vh;
+    padding: 0 !important;
+}

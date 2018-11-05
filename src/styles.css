@@ -1,1 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+@import '..\node_modules\@angular\material\prebuilt-themes\indigo-pink.css';
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+body {
+    margin: 0;
+}
+.card-container {
+    max-width: 500px;
+    min-width: 200px;
+    min-height: 250px;
+    width: 100%;
+    position: relative;
+    margin: auto;
+}
+
+.container-center {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-evenly;
+}
+.inputform {
+    display: flex;
+    flex-direction: column;
+}
+.form-container {
+    width: 70%;
+    margin: auto;
+}

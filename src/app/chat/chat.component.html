@@ -1,0 +1,16 @@
+<mat-card-content class="chat-layout">
+    <mat-toolbar role="heading" color="primary">
+          <!-- {{conversation.participants}} -->
+  </mat-toolbar>
+  <mat-chip-list  class="messages-container mat-chip-list-stacked" aria-orientation="vertical" disabled>
+    <div *ngFor="let message of messages" class="{{message.sender}}">
+        <mat-chip class="message-item" disabled>{{message.content}}</mat-chip>
+    </div>
+  </mat-chip-list>
+  <div class="message-input-container">
+    <mat-form-field class="message-input">
+      <input  matInput placeholder="Message">
+    </mat-form-field >
+    <button mat-raised-button color="primary" class="message-send">Send</button>
+  </div>
+</mat-card-content>

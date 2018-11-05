@@ -1,0 +1,42 @@
+
+<mat-tab-group mat-align-tabs="center">
+        <mat-tab label="Conversations" (click)="getContacts()">
+                <mat-nav-list>
+                        <mat-list-item class="user-list-item" *ngFor="let conversation of conversations">
+                        <button mat-list-item class="user-list-button hidden" [routerLink]="['/chat', conversation._id]"></button>
+                        <img matListAvatar  src="../../assets/User.png" alt="User picture">
+                        <h3 matLine> {{ conversation.participants}}  </h3>
+                        <!-- <p matLine>
+                            <span class="message"> {{contact._id}} </span>
+                        </p> -->
+                        <mat-divider></mat-divider>
+                    </mat-list-item>
+                    <mat-list-item class="user-list-item">
+                        <button mat-button class="user-list-button" (click)="getConversations()"><mat-icon>add</mat-icon></button>
+                        <mat-divider></mat-divider>
+                    </mat-list-item>
+                </mat-nav-list>
+        </mat-tab>
+        <mat-tab label="Contatcs" (click)="getContacts()">
+            <mat-nav-list>
+                    <mat-list-item class="user-list-item" *ngFor="let contact of contacts">
+                    <button mat-list-item class="user-list-button hidden" (click)="openConversation(contact._id)"></button>
+                    <img matListAvatar  src="../../assets/User.png" alt="User picture">
+                    <h3 matLine> {{ contact.username }}  </h3>
+                    <!-- <p matLine>
+                        <span class="message"> {{contact._id}} </span>
+                    </p> -->
+                    <mat-divider></mat-divider>
+                </mat-list-item>
+                <mat-list-item class="user-list-item">
+                    <button mat-button class="user-list-button" (click)="addContact()"><mat-icon>add</mat-icon></button>
+                    <mat-divider></mat-divider>
+                </mat-list-item>
+            </mat-nav-list>
+    </mat-tab>
+</mat-tab-group>
+
+        <!-- <button mat-raised-button class="tabsButton tabs">Contacts</button>
+            <button mat-raised-button class="tabsButton tabs">Conversations</button> -->
+            
+            

@@ -1,0 +1,30 @@
+.tabsButton{
+    min-width: 0;
+    padding: 0;
+}
+.tabs {
+    width: 41%;
+}
+.modal {
+    width: 30px;
+}
+.mat-nav-list{
+    padding-top: 0;
+}
+.message {
+    color: rgba(153, 153, 153, 1);
+}
+.user-list-item{
+    position: relative;
+
+}
+.user-list-button{
+    position: absolute ;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+.hidden{
+    opacity: 0;
+}
