@@ -28,3 +28,17 @@ export function userSet(token: string) {
     userInfo._id = helper.decodeToken(token).id;
     userInfo.email = helper.decodeToken(token).email;
 }
+
+export interface SimpleUser {
+    _id: string;
+    username: string;
+}
+
+export function participants(users: SimpleUser[]): string {
+    const part = users.map((user: SimpleUser) => {
+     if (user._id !== userInfo._id) {
+       return user.username;
+     }
+   }).filter(Boolean).join(', ');
+   return part;
+ }

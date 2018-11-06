@@ -2,12 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { httpOptions, userInfo, URL} from '../config';
+import { httpOptions, userInfo, URL, SimpleUser, participants} from '../config';
+
 
 interface Conversation {
-  messagges: [];
-  participants: string;
+  messages: any[];
+  participants: SimpleUser[];
   _id: string;
+}
+
+interface ConversationsResponse {
+  authorized: boolean;
+  conversation: Conversation;
 }
 
 @Component({
@@ -17,21 +23,22 @@ interface Conversation {
 })
 export class ChatComponent implements OnInit {
   conversation;
+  participants: string;
   messages = [];
-  constructor(private data: DashboardService, private http: HttpClient, private cookieService: CookieService) { }
+  user;
+  constructor(private data: DashboardService, private http: HttpClient, private cookieService: CookieService) {
+    this.user = userInfo._id;
+  }
 
   ngOnInit() {
     this.data.currentConversation.subscribe((conversation: Conversation) => {
-      console.log(conversation);
       this.conversation = conversation;
-      this.getMessages(conversation._id);
+      if (this.conversation) {
+        this.getMessages(conversation._id);
+      }
     });
   }
   getMessages(id: string) {
-    const data = {
-      token: this.cookieService.get('token'),
-      _id: id
-    };
     const Options = {
       headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -40,8 +47,24 @@ export class ChatComponent implements OnInit {
     Options.headers.append('Access-Control-Allow-Origin', '*');
     Options.headers.append('Access-Control-Allow-Headers', '*');
     this.http.get(URL + '/conversation/' + this.conversation, Options)
-    .subscribe((Response) => {
-      console.log(Response);
+    .subscribe((Response: ConversationsResponse) => {
+      this.messages = Response.conversation.messages;
+      this.participants = participants(Response.conversation.participants);
+    });
+  }
+  send(message: string) {
+    if (!message) { return false; }
+    const messageData = {
+      token: this.cookieService.get('token'),
+      _id: this.conversation,
+      user: this.user,
+      message: message,
+      type: 'text',
+      date: new Date()
+    };
+    this.http.post(URL + '/message', JSON.stringify(messageData), httpOptions)
+    .subscribe(() => {
+       this.getMessages(this.conversation);
     });
   }
 

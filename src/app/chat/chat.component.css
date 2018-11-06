@@ -25,11 +25,11 @@
 }
 .host {
     max-width: 45%;
-    margin-left: auto !important;
 }
 .host > mat-chip {
     background-color: lightgreen;
 }
 .other{
     max-width: 45%;
+    margin-left: auto !important;
 }

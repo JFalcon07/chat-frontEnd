@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DashboardService } from './dashboard.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,7 +10,7 @@ import { DashboardService } from './dashboard.service';
 })
 export class DashboardComponent implements OnInit {
   conversation;
-  constructor(private data: DashboardService, private router: Router, private route: ActivatedRoute) {
+  constructor(private data: DashboardService, private router: Router, private route: ActivatedRoute, private cookieService: CookieService) {
     this.route.params.subscribe(params => {
       this.conversation = params['id'];
       this.data.changeConversation(this.conversation);
@@ -17,6 +18,9 @@ export class DashboardComponent implements OnInit {
    }
 
   ngOnInit() {
+    if (!this.cookieService.get('token')) {
+      this.router.navigate(['/login']);
+    }
     this.data.currentConversation.subscribe(conversation => this.conversation = conversation);
   }
 

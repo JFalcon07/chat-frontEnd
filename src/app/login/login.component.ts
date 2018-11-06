@@ -33,15 +33,13 @@ export class LoginComponent implements OnInit {
     });
   }
   loginRequest(obj) {
-    console.log(httpOptions);
     return this.http.post(URL + '/login', JSON.stringify(obj), httpOptions)
     .subscribe((data: Data) => {
-      console.log(data);
       this.openSnackBar(data.message);
       if (data.login) {
         this.cookieService.set('token', data.token);
         userSet(data.token);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/chat']);
       }
     });
   }

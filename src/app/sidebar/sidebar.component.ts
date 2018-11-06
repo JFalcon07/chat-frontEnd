@@ -3,20 +3,16 @@ import { MatDialog } from '@angular/material';
 import { AddModalComponent } from '../add-modal/add-modal.component';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { httpOptions, userInfo, URL} from '../config';
+import { httpOptions, userInfo, URL, SimpleUser, participants} from '../config';
 import { DashboardService } from '../dashboard/dashboard.service';
 
-interface User {
-  _id: string;
-  username: string;
-}
 interface Conversation {
   _id: string;
-  participants: User[] | string;
+  participants: SimpleUser[] | string;
 }
 interface UsersResponse {
   authorized: boolean;
-  contacts: User[];
+  contacts: SimpleUser[];
 }
 interface ConversationsResponse {
   authorized: boolean;
@@ -68,26 +64,16 @@ export class SidebarComponent implements OnInit {
       token: this.cookieService.get('token'),
       _id: userInfo._id
     };
-    console.log(data);
     this.http.post(URL + '/Conversations', JSON.stringify(data), httpOptions)
     .subscribe((response: ConversationsResponse) => {
-      console.log(response);
       if (response.authorized) {
         if (response.conversations.length > 0) {
           response.conversations.forEach( element => {
-            element.participants = this.participants(<User[]>element.participants);
+            element.participants = participants(<SimpleUser[]>element.participants);
           });
           this.conversations = response.conversations;
         }
     }
     });
-  }
-  participants(users: User[]): string {
-     const part = users.map((user: User) => {
-      if (user._id !== userInfo._id) {
-        return user.username;
-      }
-    }).filter(Boolean).join(', ');
-    return part;
   }
 }
