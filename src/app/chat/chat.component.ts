@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { httpOptions, userInfo, URL, SimpleUser, participants} from '../config';
-
+import { httpOptions, userInfo, URL, SimpleUser, participants, Message} from '../config';
+import { WebsocketService } from '../wSocket.service';
+import { FormControl } from '@angular/forms';
+import * as moment from 'moment';
+import { getUsername } from './chat.service';
 
 interface Conversation {
   messages: any[];
@@ -21,12 +24,18 @@ interface ConversationsResponse {
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, AfterViewChecked {
+  @ViewChild('scroll', {read: ElementRef}) private myScrollContainer: ElementRef;
   conversation;
-  participants: string;
+  participants: SimpleUser[];
+  others: string;
   messages = [];
   user;
-  constructor(private data: DashboardService, private http: HttpClient, private cookieService: CookieService) {
+  messageControl = new FormControl('');
+  constructor(private data: DashboardService,
+    private http: HttpClient,
+    private cookieService: CookieService,
+    private webSocket: WebsocketService) {
     this.user = userInfo._id;
   }
 
@@ -37,7 +46,20 @@ export class ChatComponent implements OnInit {
         this.getMessages(conversation._id);
       }
     });
+    this.webSocket.messageRecieved()
+    .subscribe((msg: Message) => {
+      msg.user = getUsername(this.participants, msg.sender);
+      msg.date = moment(msg.date);
+      this.messages.push(msg);
+      this.scrollToBottom();
+    });
+    this.scrollToBottom();
   }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
   getMessages(id: string) {
     const Options = {
       headers: new HttpHeaders({
@@ -48,11 +70,17 @@ export class ChatComponent implements OnInit {
     Options.headers.append('Access-Control-Allow-Headers', '*');
     this.http.get(URL + '/conversation/' + this.conversation, Options)
     .subscribe((Response: ConversationsResponse) => {
+      this.participants = Response.conversation.participants;
+      this.others = participants(Response.conversation.participants);
+      Response.conversation.messages.forEach((elem) => {
+        elem.user = getUsername(this.participants, elem.sender);
+        elem.date = moment(elem.date);
+      });
       this.messages = Response.conversation.messages;
-      this.participants = participants(Response.conversation.participants);
     });
   }
-  send(message: string) {
+  send() {
+    const message = this.messageControl.value;
     if (!message) { return false; }
     const messageData = {
       token: this.cookieService.get('token'),
@@ -62,10 +90,13 @@ export class ChatComponent implements OnInit {
       type: 'text',
       date: new Date()
     };
-    this.http.post(URL + '/message', JSON.stringify(messageData), httpOptions)
-    .subscribe(() => {
-       this.getMessages(this.conversation);
-    });
+    console.log(new Date());
+    this.messageControl.setValue('');
+    this.webSocket.sendMessage(messageData);
   }
-
+  scrollToBottom(): void {
+    try {
+        this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch (err) { }
+}
 }

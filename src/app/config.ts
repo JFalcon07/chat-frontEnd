@@ -1,5 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Moment } from 'moment';
 
 interface User {
     email: string;
@@ -42,3 +43,11 @@ export function participants(users: SimpleUser[]): string {
    }).filter(Boolean).join(', ');
    return part;
  }
+ export interface Message {
+    _id:  string;
+    user: string;
+    sender: string;
+    message: string;
+    type: string;
+    date: Moment;
+}

@@ -3,8 +3,24 @@
     flex-flow: column;
     margin: 0;
 }
-.messages-container {
+.message {
+    max-width: 45%;
+    min-width: 125px;
+    margin: 5px;
+    display: inline-block !important;
+}
+.chat-container {
+    padding: 5px 5px 0 5px;
     flex: 1 1 60vh;
+    display: flex;
+    flex-flow: column;
+    overflow-y: scroll;
+}
+.message-container{
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
 }
 .message-input-container {
     flex: 0 1  !important;
@@ -12,10 +28,14 @@
     display: flex;
     padding: 15px;
 }
-.message-item {
-    width: auto !important;
+.mat-line{
+    padding: 0;
+}
+.message-content {
+    padding: 7px;
+    margin: 0;
+    border-radius: 50px;
     display: inline-block;
-    justify-content: space-between;
 }
 .message-input{
     flex: 1 0 75%;
@@ -23,13 +43,24 @@
 .message-send{
     flex: 0 0 50px !important;
 }
-.host {
-    max-width: 45%;
+.other-message{
+    margin-left: auto !important;
 }
-.host > mat-chip {
+.userName {
+    display: inline;
+    color: black;
+    margin: 0;
+    font-weight: bold;
+}
+.messageTime {
+    display: inline;
+    margin: 0;
+    margin-left: 10px;
+    align-self: auto;
+}
+.host{
     background-color: lightgreen;
 }
 .other{
-    max-width: 45%;
-    margin-left: auto !important;
+    background-color: lightgray;
 }

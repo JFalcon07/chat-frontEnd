@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { httpOptions, userInfo, URL, SimpleUser, participants} from '../config';
 import { DashboardService } from '../dashboard/dashboard.service';
+import { WebsocketService } from '../wSocket.service';
 
 interface Conversation {
   _id: string;
@@ -28,7 +29,15 @@ export class SidebarComponent implements OnInit {
   contacts = [];
   conversations = [];
   conversation;
-  constructor(public dialog: MatDialog, private http: HttpClient, private cookieService: CookieService, private data: DashboardService) { }
+  constructor(
+    public dialog: MatDialog,
+    private http: HttpClient,
+    private cookieService: CookieService,
+    private data: DashboardService,
+    private webSocket: WebsocketService) {
+      this.webSocket.joinedRoom()
+      .subscribe(msg => console.log(msg));
+    }
 
   ngOnInit() {
     // this.data.currentConversation.subscribe(conversation => this.conversation = conversation);
@@ -75,5 +84,9 @@ export class SidebarComponent implements OnInit {
         }
     }
     });
+  }
+  join(room) {
+    this.webSocket.leaveRoom();
+    this.webSocket.joinRoom(room);
   }
 }

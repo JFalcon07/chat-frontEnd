@@ -18,10 +18,9 @@ export class DashboardComponent implements OnInit {
    }
 
   ngOnInit() {
-    if (!this.cookieService.get('token')) {
-      this.router.navigate(['/login']);
-    }
     this.data.currentConversation.subscribe(conversation => this.conversation = conversation);
   }
-
+  logout() {
+    this.cookieService.delete('token');
+  }
 }

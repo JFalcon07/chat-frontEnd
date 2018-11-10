@@ -1,15 +1,21 @@
 <mat-card-content class="chat-layout">
     <mat-toolbar role="heading" color="primary">
-          {{participants}}
+          {{others}}
   </mat-toolbar>
-  <mat-chip-list  class="messages-container mat-chip-list-stacked" aria-orientation="vertical" disabled>
-    <div *ngFor="let message of messages" [ngClass]="message.sender === user ? 'host': 'other'">
-        <mat-chip class="message-item" disabled>{{message.message}}</mat-chip>
-    </div>
-  </mat-chip-list>
+  <div  class="chat-container" aria-orientation="vertical" #scroll>
+      <div *ngFor="let message of messages" [ngClass]="message.sender === user ? 'host-message message': 'other-message message'">
+        <div>
+            <mat-card-subtitle class="userName">{{message.user}}</mat-card-subtitle>
+            <mat-card-subtitle class="messageTime">{{message.date.fromNow()}}</mat-card-subtitle>
+        </div>
+        <div>
+          <p [ngClass]="message.sender === user ? 'host message-content': 'other message-content'">{{message.message}}</p>
+        </div>
+      </div>
+  </div>
   <div class="message-input-container">
     <mat-form-field class="message-input">
-      <input  matInput placeholder="Message" #message>
+      <input  matInput placeholder="Message" (keyup.enter)="send()" [formControl]="messageControl" #message>
     </mat-form-field >
     <button mat-raised-button color="primary" class="message-send" (click)="send(message.value)">Send</button>
   </div>

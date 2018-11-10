@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
+import { ScrollDispatchModule } from '@angular/cdk/scrolling';
 
 import {
   MatFormFieldModule,
@@ -40,6 +41,7 @@ import { AddModalComponent } from '../add-modal/add-modal.component';
     MatMenuModule,
     MatRadioModule,
     MatToolbarModule,
+    ScrollDispatchModule,
   ],
   exports: [
     MatFormFieldModule,
@@ -58,6 +60,7 @@ import { AddModalComponent } from '../add-modal/add-modal.component';
     MatMenuModule,
     MatRadioModule,
     MatToolbarModule,
+    ScrollDispatchModule,
   ],
   declarations: []
 })

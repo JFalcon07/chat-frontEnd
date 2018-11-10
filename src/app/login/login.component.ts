@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
     .subscribe((data: Data) => {
       this.openSnackBar(data.message);
       if (data.login) {
+        this.cookieService.delete('token');
         this.cookieService.set('token', data.token);
         userSet(data.token);
         this.router.navigate(['/chat']);
