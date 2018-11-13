@@ -7,7 +7,7 @@
     </mat-form-field>
     <button mat-button  (click)="getUsers(search.value)" >Search</button>
     <p *ngIf="found === false"> No user was found</p>
-    <mat-radio-group class="user-list" *ngIf="users" [(ngModel)]="favoriteSeason">
+    <mat-radio-group class="user-list" *ngIf="users" [(ngModel)]="selectedUser">
         <mat-radio-button *ngFor="let user of users" class="user-list-item" [value]="user.email">
             {{user.username}}
         </mat-radio-button>
@@ -15,6 +15,6 @@
   </div>
   <div mat-dialog-actions class="modal-buttons">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button (click)="addUser(favoriteSeason)" >Add</button>
+    <button mat-button (click)="addUser(selectedUser)" >Add</button>
   </div>
 </div>

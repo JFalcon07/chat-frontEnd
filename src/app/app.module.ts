@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { URL } from './config';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -22,6 +21,7 @@ import { DashboardService } from './dashboard/dashboard.service';
 import { Logged } from './login/login.service';
 import { LoginGuardService } from './login-guard.service';
 import { WebsocketService } from './wSocket.service';
+import { ConversationModalComponent } from './conversation-modal/conversation-modal.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'chat', pathMatch: 'full'},
@@ -31,7 +31,6 @@ const routes: Routes = [
   {path: 'chat/:id', component: DashboardComponent, canActivate: [ LoginGuardService ]}
 ];
 
-const config: SocketIoConfig = {url: URL , options: {} };
 
 @NgModule({
   declarations: [
@@ -42,7 +41,8 @@ const config: SocketIoConfig = {url: URL , options: {} };
     SidebarComponent,
     ChatComponent,
     SettingsComponent,
-    AddModalComponent
+    AddModalComponent,
+    ConversationModalComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -51,10 +51,9 @@ const config: SocketIoConfig = {url: URL , options: {} };
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,
-    HttpClientModule,
-    SocketIoModule.forRoot(config)
+    HttpClientModule
   ],
-  entryComponents: [AddModalComponent],
+  entryComponents: [AddModalComponent, ConversationModalComponent],
   providers: [
     CookieService,
     DashboardService,

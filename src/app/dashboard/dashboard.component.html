@@ -17,7 +17,7 @@
   <mat-card class="sidebar-container sidebar">
     <app-sidebar></app-sidebar>
   </mat-card>
-  <mat-card class="chat-container">
+  <mat-card *ngIf="conversation" class="chat-container">
     <app-chat></app-chat>
   </mat-card>
 </div>

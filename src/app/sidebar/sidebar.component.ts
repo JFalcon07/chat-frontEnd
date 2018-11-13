@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AddModalComponent } from '../add-modal/add-modal.component';
+import { ConversationModalComponent } from '../conversation-modal/conversation-modal.component';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { httpOptions, userInfo, URL, SimpleUser, participants} from '../config';
@@ -26,46 +27,28 @@ interface ConversationsResponse {
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-  contacts = [];
   conversations = [];
   conversation;
   constructor(
     public dialog: MatDialog,
     private http: HttpClient,
     private cookieService: CookieService,
-    private data: DashboardService,
     private webSocket: WebsocketService) {
       this.webSocket.joinedRoom()
       .subscribe(msg => console.log(msg));
     }
 
   ngOnInit() {
-    // this.data.currentConversation.subscribe(conversation => this.conversation = conversation);
     this.getConversations();
-    this.getContacts();
+    console.log(this.conversations);
   }
   addContact(): void {
     const dialogRef = this.dialog.open(AddModalComponent, {
       width: '350px',
       height: '500px'
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      this.getContacts();
-    });
-  }
-  getContacts() {
-    const data = {
-      token: this.cookieService.get('token'),
-      email: userInfo.email
-    };
-    this.http.post(URL + '/contacts', JSON.stringify(data), httpOptions)
-    .subscribe((response: UsersResponse) => {
-      if (response.authorized) {
-        if (response.contacts.length > 0) {
-          this.contacts = response.contacts;
-        }
-    }
+      this.getConversations();
     });
   }
   getConversations() {
@@ -81,6 +64,7 @@ export class SidebarComponent implements OnInit {
             element.participants = participants(<SimpleUser[]>element.participants);
           });
           this.conversations = response.conversations;
+          console.log(this.conversations);
         }
     }
     });
@@ -88,5 +72,14 @@ export class SidebarComponent implements OnInit {
   join(room) {
     this.webSocket.leaveRoom();
     this.webSocket.joinRoom(room);
+  }
+  newConversation() {
+    const dialogRef2 = this.dialog.open(ConversationModalComponent, {
+      width: '350px',
+      height: '500px'
+    });
+    dialogRef2.afterClosed().subscribe(result => {
+      this.getConversations();
+    });
   }
 }

@@ -1,0 +1,15 @@
+.modal-container{
+    position: relative;
+    height: 100%;
+}
+.modal-buttons{
+    position: absolute;
+    bottom: 0;
+}
+.user-list {
+    height: 73%;
+}
+.user-list-item{
+    display: block;
+    margin: 5px;
+}

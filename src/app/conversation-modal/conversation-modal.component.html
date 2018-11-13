@@ -1,0 +1,13 @@
+<div class="modal-container">
+  <h1 mat-dialog-title>Create new group conversation</h1>
+  <p>Contacts</p>
+  <div mat-dialog-content class="user-list">
+        <mat-checkbox [(ngModel)]="user.checked" *ngFor="let user of users" class="user-list-item">
+            {{user.username}}
+        </mat-checkbox>
+  </div>
+  <div mat-dialog-actions class="modal-buttons">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button (click)="addUser()" >Create</button>
+  </div>
+</div>

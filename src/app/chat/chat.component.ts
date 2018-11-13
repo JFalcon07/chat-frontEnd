@@ -90,7 +90,6 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       type: 'text',
       date: new Date()
     };
-    console.log(new Date());
     this.messageControl.setValue('');
     this.webSocket.sendMessage(messageData);
   }

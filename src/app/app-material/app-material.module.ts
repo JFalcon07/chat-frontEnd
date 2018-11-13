@@ -19,6 +19,7 @@ import {
   MatMenuModule,
   MatRadioModule,
   MatToolbarModule,
+  MatCheckboxModule,
 } from '@angular/material';
 import { AddModalComponent } from '../add-modal/add-modal.component';
 
@@ -42,6 +43,7 @@ import { AddModalComponent } from '../add-modal/add-modal.component';
     MatRadioModule,
     MatToolbarModule,
     ScrollDispatchModule,
+    MatCheckboxModule,
   ],
   exports: [
     MatFormFieldModule,
@@ -61,6 +63,7 @@ import { AddModalComponent } from '../add-modal/add-modal.component';
     MatRadioModule,
     MatToolbarModule,
     ScrollDispatchModule,
+    MatCheckboxModule,
   ],
   declarations: []
 })

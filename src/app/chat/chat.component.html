@@ -4,7 +4,7 @@
   </mat-toolbar>
   <div  class="chat-container" aria-orientation="vertical" #scroll>
       <div *ngFor="let message of messages" [ngClass]="message.sender === user ? 'host-message message': 'other-message message'">
-        <div>
+        <div class="message-info">
             <mat-card-subtitle class="userName">{{message.user}}</mat-card-subtitle>
             <mat-card-subtitle class="messageTime">{{message.date.fromNow()}}</mat-card-subtitle>
         </div>
