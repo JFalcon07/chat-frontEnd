@@ -13,7 +13,8 @@
 }
 .sidebar-container {
     flex: 0 0 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .chat-container {
     flex: 1 1 75%;

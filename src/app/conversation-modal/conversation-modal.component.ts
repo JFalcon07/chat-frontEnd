@@ -4,6 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { httpOptions, userInfo, URL} from '../config';
+import { WebsocketService } from '../wSocket.service';
 
 interface User {
   _id: string;
@@ -27,7 +28,7 @@ export class ConversationModalComponent implements OnInit {
   users: User[];
   found: boolean;
   constructor(public dialogRef: MatDialogRef<ConversationModalComponent>,
-    private http: HttpClient, private cookieService: CookieService, public snackBar: MatSnackBar) { }
+    private http: HttpClient, private cookieService: CookieService, public snackBar: MatSnackBar, private webSocket: WebsocketService) { }
   ngOnInit() {
     this.getUsers();
   }
@@ -71,10 +72,11 @@ export class ConversationModalComponent implements OnInit {
     token: this.cookieService.get('token'),
     users: users
   };
-  this.http.post(URL + '/conversation', JSON.stringify(data), httpOptions)
-  .subscribe((response: Data) => {
-    this.openSnackBar(response.message);
-    if (response.added) { this.onCancel(); }
-  });
+  this.webSocket.addConversation(data);
+  // this.http.post(URL + '/conversation', JSON.stringify(data), httpOptions)
+  // .subscribe((response: Data) => {
+  //   this.openSnackBar(response.message);
+  //   if (response.added) { this.onCancel(); }
+  // });
   }
 }

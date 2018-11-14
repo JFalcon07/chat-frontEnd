@@ -43,11 +43,13 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     this.data.currentConversation.subscribe((conversation: Conversation) => {
       this.conversation = conversation;
       if (this.conversation) {
+        this.messageControl.setValue('');
         this.getMessages(conversation._id);
       }
     });
     this.webSocket.messageRecieved()
     .subscribe((msg: Message) => {
+      if (msg.room !== this.conversation) { return false; }
       msg.user = getUsername(this.participants, msg.sender);
       msg.date = moment(msg.date);
       this.messages.push(msg);
@@ -70,6 +72,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     Options.headers.append('Access-Control-Allow-Headers', '*');
     this.http.get(URL + '/conversation/' + this.conversation, Options)
     .subscribe((Response: ConversationsResponse) => {
+      if (!Response.conversation) { return false; }
       this.participants = Response.conversation.participants;
       this.others = participants(Response.conversation.participants);
       Response.conversation.messages.forEach((elem) => {

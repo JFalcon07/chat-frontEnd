@@ -44,6 +44,7 @@ export function participants(users: SimpleUser[]): string {
    return part;
  }
  export interface Message {
+     room: string;
     _id:  string;
     user: string;
     sender: string;

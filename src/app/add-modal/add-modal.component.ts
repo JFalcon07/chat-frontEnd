@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { httpOptions, userInfo, URL} from '../config';
+import { WebsocketService } from '../wSocket.service';
 
 interface User {
   email: string;
@@ -24,7 +25,10 @@ export class AddModalComponent implements OnInit {
   users: User[];
   found: boolean;
   constructor(public dialogRef: MatDialogRef<AddModalComponent>,
-  private http: HttpClient, private cookieService: CookieService, public snackBar: MatSnackBar) { }
+  private http: HttpClient,
+  private cookieService: CookieService,
+  public snackBar: MatSnackBar,
+  private webSocket: WebsocketService) { }
 
   ngOnInit() {
   }
@@ -60,10 +64,6 @@ export class AddModalComponent implements OnInit {
       token: this.cookieService.get('token'),
       users: [userInfo.email, user]
     };
-    this.http.post(URL + '/add', JSON.stringify(data), httpOptions)
-    .subscribe((response: Data) => {
-      this.openSnackBar(response.message);
-      if (response.added) { this.onCancel(); }
-    });
+    this.webSocket.addUser(data);
   }
 }

@@ -8,11 +8,12 @@
                 <mat-divider></mat-divider>
             </mat-list-item>
             <mat-list-item class="user-list-item" *ngFor="let conversation of conversations">
-                <button mat-list-item class="user-list-button hidden" (click)="join(conversation._id)" [routerLink]="['/chat', conversation._id]"></button>
-                <img matListAvatar  src="../../assets/User.png" alt="User picture">
+                <button mat-list-item class="user-list-button hidden" (click)="open(conversation._id)" [routerLink]="['/chat', conversation._id]"></button>
+                <div *ngIf="conversation.notRead" matBadge="{{conversation.notRead}}"></div>
+                <img matListAvatar src="../../assets/User.png" alt="User picture">
                 <h3 matLine> {{ conversation.participants}}  </h3>
-                <!-- <p matLine>
-                    <span class="message"> {{contact._id}} </span>
+                <!-- <p matLine >
+                    <span class="message"> hello </span>
                 </p> -->
                 <mat-divider></mat-divider>
             </mat-list-item>

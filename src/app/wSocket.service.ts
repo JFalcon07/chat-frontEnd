@@ -2,17 +2,25 @@ import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { Observable, Subject } from 'rxjs';
 import { URL, Message } from './config';
+import { userInfo } from './config';
 // import * as Rx from 'rxjs/Rx';
 
 @Injectable()
 export class WebsocketService  {
     private socket = io(URL);
-    constructor() { }
-
+    constructor() {
+        this.socket.emit('linkUser', userInfo._id);
+     }
     joinRoom(conversation: string) {
         this.socket.emit('join', conversation);
     }
 
+    addUser(user) {
+        this.socket.emit('addUser', user);
+    }
+    addConversation(conversation) {
+        this.socket.emit('addConversation', conversation);
+    }
     sendMessage(msg) {
         this.socket.emit('message', msg);
     }
@@ -20,6 +28,27 @@ export class WebsocketService  {
     leaveRoom() {
         this.socket.emit('leave', null);
     }
+
+    addedUser() {
+        const observable = new Observable(observer => {
+            this.socket.on('addedUser', (data) => {
+                observer.next(data);
+            });
+            return () => this.socket.disconnect();
+        });
+        return observable;
+    }
+
+    newConversation() {
+        const observable = new Observable(observer => {
+            this.socket.on('newConversation', (data) => {
+                observer.next(data);
+            });
+            return () => this.socket.disconnect();
+        });
+        return observable;
+    }
+
     joinedRoom() {
         const observable = new Observable(observer => {
             this.socket.on('joined', (data) => {

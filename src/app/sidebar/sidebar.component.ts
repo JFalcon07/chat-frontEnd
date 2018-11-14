@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { AddModalComponent } from '../add-modal/add-modal.component';
 import { ConversationModalComponent } from '../conversation-modal/conversation-modal.component';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { httpOptions, userInfo, URL, SimpleUser, participants} from '../config';
+import { httpOptions, userInfo, URL, SimpleUser, participants, Message} from '../config';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { WebsocketService } from '../wSocket.service';
 
 interface Conversation {
   _id: string;
   participants: SimpleUser[] | string;
+  message?: string;
+  notRead: number;
 }
 interface UsersResponse {
   authorized: boolean;
@@ -19,6 +21,10 @@ interface UsersResponse {
 interface ConversationsResponse {
   authorized: boolean;
   conversations: Conversation[];
+}
+interface NewConversation {
+  added: boolean;
+  conversation: Conversation;
 }
 
 @Component({
@@ -32,23 +38,53 @@ export class SidebarComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private http: HttpClient,
+    private data: DashboardService,
     private cookieService: CookieService,
+    public snackBar: MatSnackBar,
     private webSocket: WebsocketService) {
       this.webSocket.joinedRoom()
-      .subscribe(msg => console.log(msg));
+      .subscribe();
     }
 
   ngOnInit() {
     this.getConversations();
-    console.log(this.conversations);
+    this.data.currentConversation.subscribe((conversation: Conversation) => {
+      this.conversation = conversation;
+    });
+    this.webSocket.messageRecieved()
+    .subscribe((message: Message) => {
+      if (message.room === this.conversation) { return false; }
+      this.conversations.forEach((conv: Conversation) => {
+        if (message.room === conv._id) {
+          conv.notRead++;
+        }
+      });
+    });
+    this.webSocket.addedUser()
+    .subscribe((conversation: Conversation) => {
+      if (conversation.participants) {
+      conversation.participants = participants(<SimpleUser[]>conversation.participants);
+      conversation.notRead = 0;
+      this.conversations.push(conversation);
+      return this.dialog.closeAll();
+      }
+      return this.snackBar.open(conversation.message, undefined, {
+        duration: 2000,
+      });
+    });
+    this.webSocket.newConversation()
+    .subscribe((newconversation: NewConversation) => {
+      if (newconversation.added) {
+        newconversation.conversation.participants = participants(<SimpleUser[]>newconversation.conversation.participants);
+        this.conversations.push(newconversation.conversation);
+        return this.dialog.closeAll();
+      }
+    });
   }
   addContact(): void {
-    const dialogRef = this.dialog.open(AddModalComponent, {
+    this.dialog.open(AddModalComponent, {
       width: '350px',
       height: '500px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      this.getConversations();
     });
   }
   getConversations() {
@@ -61,25 +97,26 @@ export class SidebarComponent implements OnInit {
       if (response.authorized) {
         if (response.conversations.length > 0) {
           response.conversations.forEach( element => {
+            this.webSocket.joinRoom(element._id);
             element.participants = participants(<SimpleUser[]>element.participants);
+            element.notRead = 0;
           });
           this.conversations = response.conversations;
-          console.log(this.conversations);
         }
     }
     });
   }
-  join(room) {
-    this.webSocket.leaveRoom();
-    this.webSocket.joinRoom(room);
-  }
   newConversation() {
-    const dialogRef2 = this.dialog.open(ConversationModalComponent, {
+    this.dialog.open(ConversationModalComponent, {
       width: '350px',
       height: '500px'
     });
-    dialogRef2.afterClosed().subscribe(result => {
-      this.getConversations();
+  }
+  open(id: string) {
+    this.conversations.forEach((conv: Conversation) => {
+      if (conv._id === id) {
+        conv.notRead = 0;
+      }
     });
   }
 }
