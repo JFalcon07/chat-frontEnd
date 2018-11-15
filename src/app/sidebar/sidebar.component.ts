@@ -10,9 +10,11 @@ import { WebsocketService } from '../wSocket.service';
 
 interface Conversation {
   _id: string;
-  participants: SimpleUser[] | string;
+  sending: string;
+  participants: SimpleUser[];
   message?: string;
   notRead: number;
+  online?: boolean;
 }
 interface UsersResponse {
   authorized: boolean;
@@ -42,12 +44,11 @@ export class SidebarComponent implements OnInit {
     private cookieService: CookieService,
     public snackBar: MatSnackBar,
     private webSocket: WebsocketService) {
-      this.webSocket.joinedRoom()
-      .subscribe();
     }
 
-  ngOnInit() {
-    this.getConversations();
+  async ngOnInit() {
+    await this.getConversations();
+    this.webSocket.connect();
     this.data.currentConversation.subscribe((conversation: Conversation) => {
       this.conversation = conversation;
     });
@@ -63,8 +64,7 @@ export class SidebarComponent implements OnInit {
     this.webSocket.addedUser()
     .subscribe((conversation: Conversation) => {
       if (conversation.participants) {
-      conversation.participants = participants(<SimpleUser[]>conversation.participants);
-      conversation.notRead = 0;
+      conversation = this.configConversations(conversation);
       this.conversations.push(conversation);
       return this.dialog.closeAll();
       }
@@ -75,10 +75,23 @@ export class SidebarComponent implements OnInit {
     this.webSocket.newConversation()
     .subscribe((newconversation: NewConversation) => {
       if (newconversation.added) {
-        newconversation.conversation.participants = participants(<SimpleUser[]>newconversation.conversation.participants);
+        newconversation.conversation = this.configConversations(newconversation.conversation);
         this.conversations.push(newconversation.conversation);
         return this.dialog.closeAll();
       }
+    });
+    this.webSocket.online()
+    .subscribe((id: string) => {
+      this.online(id);
+    });
+    this.webSocket.offline()
+    .subscribe((id: string) => {
+      this.conversations.forEach((conv: Conversation) => {
+        if (conv.participants.length > 2) { return false; }
+        const disconectedUser = conv.participants.filter(user => user._id === id)[0];
+        if (!disconectedUser) { return false; }
+        conv.online = false;
+      });
     });
   }
   addContact(): void {
@@ -87,21 +100,19 @@ export class SidebarComponent implements OnInit {
       height: '500px'
     });
   }
-  getConversations() {
+   getConversations() {
     const data = {
       token: this.cookieService.get('token'),
       _id: userInfo._id
     };
-    this.http.post(URL + '/Conversations', JSON.stringify(data), httpOptions)
+     return this.http.post(URL + '/Conversations', JSON.stringify(data), httpOptions)
     .subscribe((response: ConversationsResponse) => {
       if (response.authorized) {
         if (response.conversations.length > 0) {
           response.conversations.forEach( element => {
-            this.webSocket.joinRoom(element._id);
-            element.participants = participants(<SimpleUser[]>element.participants);
-            element.notRead = 0;
+            element = this.configConversations(element);
           });
-          this.conversations = response.conversations;
+         return this.conversations = response.conversations;
         }
     }
     });
@@ -117,6 +128,22 @@ export class SidebarComponent implements OnInit {
       if (conv._id === id) {
         conv.notRead = 0;
       }
+    });
+  }
+  configConversations(conversation: Conversation) {
+    this.webSocket.joinRoom(conversation._id);
+    if (conversation.participants.length === 2) { conversation.online = false; }
+    conversation.sending = participants(conversation.participants);
+    conversation.notRead = 0;
+    return conversation;
+  }
+
+  online(id: string) {
+    this.conversations.forEach((conv: Conversation) => {
+      if (conv.participants.length > 2) { return false; }
+      const conectedUser = conv.participants.filter(user => user._id === id)[0];
+      if (!conectedUser) { return false; }
+       conv.online = true;
     });
   }
 }

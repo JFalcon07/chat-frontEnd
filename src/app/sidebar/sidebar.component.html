@@ -9,12 +9,13 @@
             </mat-list-item>
             <mat-list-item class="user-list-item" *ngFor="let conversation of conversations">
                 <button mat-list-item class="user-list-button hidden" (click)="open(conversation._id)" [routerLink]="['/chat', conversation._id]"></button>
-                <div *ngIf="conversation.notRead" matBadge="{{conversation.notRead}}"></div>
                 <img matListAvatar src="../../assets/User.png" alt="User picture">
-                <h3 matLine> {{ conversation.participants}}  </h3>
+                <h3 matLine> {{ conversation.sending}}  </h3>
+                <mat-icon *ngIf="conversation.online" class="online">fiber_manual_record</mat-icon>
                 <!-- <p matLine >
                     <span class="message"> hello </span>
                 </p> -->
+                <div *ngIf="conversation.notRead" class="not-read"  matBadge="{{conversation.notRead}}"></div>
                 <mat-divider></mat-divider>
             </mat-list-item>
         </mat-nav-list>

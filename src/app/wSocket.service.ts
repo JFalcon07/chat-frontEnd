@@ -7,10 +7,15 @@ import { userInfo } from './config';
 
 @Injectable()
 export class WebsocketService  {
-    private socket = io(URL);
+    private socket;
     constructor() {
-        this.socket.emit('linkUser', userInfo._id);
+
      }
+    connect() {
+        this.socket = io(URL);
+        this.socket.emit('linkUser', userInfo._id);
+    }
+
     joinRoom(conversation: string) {
         this.socket.emit('join', conversation);
     }
@@ -67,5 +72,27 @@ export class WebsocketService  {
             return () => this.socket.disconnect();
         });
         return observable;
+    }
+
+    online() {
+        const observable = new Observable(observer => {
+            this.socket.on('online', (id) => {
+                observer.next(id);
+            });
+            return () => this.socket.disconnect();
+        });
+        return observable;
+    }
+    offline() {
+        const observable = new Observable(observer => {
+            this.socket.on('offline', (id) => {
+                observer.next(id);
+            });
+            return () => this.socket.disconnect();
+        });
+        return observable;
+    }
+    disconnect() {
+        this.socket.disconnect();
     }
 }

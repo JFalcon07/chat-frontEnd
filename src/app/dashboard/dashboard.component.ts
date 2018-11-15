@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DashboardService } from './dashboard.service';
 import { CookieService } from 'ngx-cookie-service';
+import { WebsocketService } from '../wSocket.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +11,11 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class DashboardComponent implements OnInit {
   conversation;
-  constructor(private data: DashboardService, private router: Router, private route: ActivatedRoute, private cookieService: CookieService) {
+  constructor(private data: DashboardService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private cookieService: CookieService,
+    private Websocket: WebsocketService) {
     this.route.params.subscribe(params => {
       this.conversation = params['id'];
       this.data.changeConversation(this.conversation);
@@ -23,6 +28,7 @@ export class DashboardComponent implements OnInit {
     this.data.changeConversation(this.conversation);
   }
   logout() {
-    this.cookieService.delete('token');
+    this.Websocket.disconnect();
+    this.cookieService.deleteAll();
   }
 }

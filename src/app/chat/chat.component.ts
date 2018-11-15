@@ -39,8 +39,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     this.user = userInfo._id;
   }
 
-  ngOnInit() {
-    this.data.currentConversation.subscribe((conversation: Conversation) => {
+  async ngOnInit() {
+    await this.data.currentConversation.subscribe((conversation: Conversation) => {
       this.conversation = conversation;
       if (this.conversation) {
         this.messageControl.setValue('');
