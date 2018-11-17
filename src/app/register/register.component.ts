@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {MatSnackBar} from '@angular/material';
-import { URL } from '../config';
-import { passwordmatcher, Language, RegisterObj, Data } from './register.service';
+import { URL, languages, Language } from '../config';
+import { passwordmatcher, RegisterObj, Data } from './register.service';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
@@ -11,10 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  languages: Language[] = [
-    {value: 'en', viewValue: 'English'},
-    {value: 'es', viewValue: 'Spanish'}
-  ];
+  languages: Language[];
   registerForm: FormGroup = new FormGroup({
     email: new FormControl ('', [Validators.required, Validators.email]),
     password:  new FormControl ('', [Validators.required, Validators.minLength(4)]),
@@ -53,6 +50,7 @@ export class RegisterComponent implements OnInit {
     });
   }
   ngOnInit() {
+    this.languages = languages;
   }
 
 }

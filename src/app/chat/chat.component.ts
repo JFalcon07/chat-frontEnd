@@ -7,6 +7,7 @@ import { WebsocketService } from '../wSocket.service';
 import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
 import { getUsername } from './chat.service';
+import { Router } from '@angular/router';
 
 interface Conversation {
   messages: any[];
@@ -35,18 +36,24 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   constructor(private data: DashboardService,
     private http: HttpClient,
     private cookieService: CookieService,
+    private router: Router,
     private webSocket: WebsocketService) {
     this.user = userInfo._id;
   }
 
   async ngOnInit() {
-    await this.data.currentConversation.subscribe((conversation: Conversation) => {
+    await this.data.currentConversation.subscribe(async (conversation: Conversation) => {
       this.conversation = conversation;
       if (this.conversation) {
         this.messageControl.setValue('');
-        this.getMessages(conversation._id);
+        await this.getMessages(conversation._id);
       }
     });
+
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
     this.webSocket.messageRecieved()
     .subscribe((msg: Message) => {
       if (msg.room !== this.conversation) { return false; }
@@ -55,10 +62,6 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       this.messages.push(msg);
       this.scrollToBottom();
     });
-    this.scrollToBottom();
-  }
-
-  ngAfterViewChecked() {
     this.scrollToBottom();
   }
 
@@ -72,7 +75,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     Options.headers.append('Access-Control-Allow-Headers', '*');
     this.http.get(URL + '/conversation/' + this.conversation, Options)
     .subscribe((Response: ConversationsResponse) => {
-      if (!Response.conversation) { return false; }
+      if (!Response.conversation) { return this.router.navigate(['/chat']); }
       this.participants = Response.conversation.participants;
       this.others = participants(Response.conversation.participants);
       Response.conversation.messages.forEach((elem) => {

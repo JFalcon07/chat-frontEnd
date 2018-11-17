@@ -1,3 +1,73 @@
-<p>
-  settings works!
-</p>
+<mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+            Change Password
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <form [formGroup]="passwordForm">
+        <mat-form-field>
+          <input matInput formControlName="password" type="password" placeholder="Password">
+          <mat-error *ngIf="f.password.hasError('required')">
+              Password is required
+            </mat-error>
+            <mat-error *ngIf="f.password.hasError('minlength')">
+                Password need to be a least 4 characters
+            </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <input matInput type="password" placeholder="Confirm Password" formControlName="passwordConfirm" required>
+            <mat-error *ngIf="f.passwordConfirm.hasError('required')">
+                Password confirmation is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="passwordForm.hasError('noMatch') && !f.passwordConfirm.hasError('required')">
+              Password confirmation does not match
+            </mat-error>
+        </mat-form-field>
+        <br>
+        <button mat-raised-button color="primary" (click)="changePassword()" >Save</button>
+      </form>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+              {{username}}
+          </mat-panel-title>
+          <mat-panel-description>
+            Change username
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <form>
+          <mat-form-field>
+            <input matInput [formControl]="usernameForm" placeholder="New Username">
+            <mat-error *ngIf="usernameForm.hasError('required')">
+                UserName is required
+              </mat-error>
+          </mat-form-field>
+          <br>
+          <button mat-raised-button color="primary" (click)="changeUsername()">Save</button>
+        </form>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+              {{language}}
+          </mat-panel-title>
+          <mat-panel-description>
+            Change language
+          </mat-panel-description>
+          </mat-expansion-panel-header>
+          <form>
+            <mat-form-field>
+                <mat-select placeholder="Language" [formControl]="languageForm">
+                  <mat-option *ngFor="let language of languages" [value]="language.value">
+                    {{language.viewValue}}
+                  </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <button mat-raised-button color="primary" (click)="newLanguage()">Save</button>
+          </form>
+    </mat-expansion-panel>
+    </mat-accordion>

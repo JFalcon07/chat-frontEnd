@@ -1,23 +1,32 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="bar">
   <h1>Some random chat</h1>
-  <button mat-icon-button class="user-avatar" [matMenuTriggerFor]="options">
+  <div>
+    <h1 class="username">{{username}}</h1>
+    <button mat-icon-button class="user-avatar" [matMenuTriggerFor]="options">
       <img src="../../assets/User.png" alt="User picture" width="70px" >
       <mat-menu #options="matMenu">
-          <a [routerLink]="['/settings']" mat-menu-item>Settings</a>
+          <a (click)="settings=true" mat-menu-item>Settings</a>
           <a (click)="logout()" [routerLink]="['/login']" mat-menu-item>Logout</a>
       </mat-menu>
-  </button>
+    </button>
+  </div>
 </div>
-<span [ngSwitch]="">
-<div *ngSwitchCase="true">
+<mat-divider></mat-divider>
+<div [ngSwitch]="settings">
+    <div *ngSwitchCase="true" class="dashboard-container">
+        <mat-card class="card-container settings">
+          <app-settings></app-settings>
+          <button mat-flat-button color="primary"  class="return" (click)='settings=false'>Return</button>
+        </mat-card>
+      </div>
 
-</div>
-<div class="dashboard-container" *ngSwitchDefault>
+<div *ngSwitchCase="false" class="dashboard-container">
   <mat-card class="sidebar-container sidebar">
     <app-sidebar></app-sidebar>
   </mat-card>
   <mat-card *ngIf="conversation" class="chat-container">
     <app-chat></app-chat>
   </mat-card>
+</div>
 </div>

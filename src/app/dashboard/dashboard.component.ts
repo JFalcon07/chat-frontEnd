@@ -3,6 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DashboardService } from './dashboard.service';
 import { CookieService } from 'ngx-cookie-service';
 import { WebsocketService } from '../wSocket.service';
+import { httpOptions, userInfo, URL, setUser, User } from '../config';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,18 +13,27 @@ import { WebsocketService } from '../wSocket.service';
 })
 export class DashboardComponent implements OnInit {
   conversation;
+  username: string;
+  settings: boolean;
   constructor(private data: DashboardService,
     private router: Router,
     private route: ActivatedRoute,
     private cookieService: CookieService,
-    private Websocket: WebsocketService) {
-    this.route.params.subscribe(params => {
-      this.conversation = params['id'];
-      this.data.changeConversation(this.conversation);
-  });
+    private Websocket: WebsocketService,
+    private http: HttpClient) {
    }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.conversation = params.id;
+      this.data.changeConversation(this.conversation);
+  });
+    this.http.post(URL + '/userInfo', JSON.stringify({token: this.cookieService.get('token'), user: userInfo._id}), httpOptions)
+    .subscribe((user: User) => {
+      setUser(user.username, user.language);
+      this.username = userInfo.username;
+    });
+    this.settings = false;
     this.conversation = undefined;
     this.data.currentConversation.subscribe(conversation => this.conversation = conversation);
     this.data.changeConversation(this.conversation);
@@ -30,5 +41,8 @@ export class DashboardComponent implements OnInit {
   logout() {
     this.Websocket.disconnect();
     this.cookieService.deleteAll();
+  }
+  settingsView() {
+    this.settings = true;
   }
 }

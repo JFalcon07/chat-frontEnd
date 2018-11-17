@@ -1,4 +1,4 @@
-import { ValidatorFn, AbstractControl, Validators } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 
 function checkErrors(item: AbstractControl, validation: boolean ): object | null {
     if (item.errors && validation) {
@@ -28,11 +28,6 @@ export const passwordmatcher = (control: AbstractControl): {[key: string]: boole
     }
 
 };
-
-export interface Language {
-    value: string;
-    viewValue: string;
-}
 
 export interface RegisterObj {
     email: string;

@@ -5,7 +5,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Data } from './login.service';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { httpOptions, URL, userSet } from '../config';
+import { httpOptions, URL, tokenSet } from '../config';
 
 @Component({
   selector: 'app-login',
@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
       if (data.login) {
         this.cookieService.delete('token');
         this.cookieService.set('token', data.token);
-        userSet(data.token);
+        tokenSet(data.token);
         this.router.navigate(['/chat']);
       }
     });

@@ -1,24 +1,29 @@
         <div class="tabsButton">
-        <mat-card class=" tabs">Conversations</mat-card>
+        <button mat-raised-button class="tabs" (click)="contactsChange()"><span *ngIf="!viewContacts">Conversations</span><span *ngIf="viewContacts">Contacts</span></button>
         <button mat-raised-button class="add tabsButton" (click)="addContact()"><mat-icon>person_add</mat-icon></button>
         </div>
-        <mat-nav-list>
+        <mat-nav-list *ngIf="!viewContacts">
             <mat-list-item class="user-list-item">
                 <button mat-button class="user-list-button" (click)="newConversation()"><mat-icon>add</mat-icon></button>
                 <mat-divider></mat-divider>
             </mat-list-item>
             <mat-list-item class="user-list-item" *ngFor="let conversation of conversations">
-                <button mat-list-item class="user-list-button hidden" (click)="open(conversation._id)" [routerLink]="['/chat', conversation._id]"></button>
+                <button mat-list-item class="user-list-button hidden" type='button' (click)="open(conversation._id)" type="button"></button>
                 <img matListAvatar src="../../assets/User.png" alt="User picture">
                 <h3 matLine> {{ conversation.sending}}  </h3>
                 <mat-icon *ngIf="conversation.online" class="online">fiber_manual_record</mat-icon>
-                <!-- <p matLine >
-                    <span class="message"> hello </span>
-                </p> -->
                 <div *ngIf="conversation.notRead" class="not-read"  matBadge="{{conversation.notRead}}"></div>
                 <mat-divider></mat-divider>
             </mat-list-item>
         </mat-nav-list>
-
+        <mat-list *ngIf="viewContacts">
+                <mat-list-item class="user-list-item" *ngFor="let contact of contacts">
+                    <img matListAvatar src="../../assets/User.png" alt="User picture">
+                    <h3 matLine> {{ contact.username }}  </h3>
+                    <button mat-icon-button color="warn" class="delete" (click)="deleteContact(contact._id)"><mat-icon>remove_circle</mat-icon></button>
+                    <mat-divider></mat-divider>
+                </mat-list-item>
+            </mat-list>
+    
             
             

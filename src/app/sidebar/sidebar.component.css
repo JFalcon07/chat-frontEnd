@@ -25,7 +25,7 @@
 .modal {
     width: 30px;
 }
-.mat-nav-list{
+.mat-nav-list, .mat-list{
     padding-top: 0;
 }
 .message {
@@ -51,4 +51,10 @@
 }
 .online {
     color: lime;
+}
+.delete {
+    width: 21% !important;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }

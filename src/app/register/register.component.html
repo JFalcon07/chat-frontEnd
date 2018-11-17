@@ -40,15 +40,15 @@
         </mat-form-field>
 
         <mat-form-field>
-          <mat-select placeholder="Language" formControlName="language">
-            <mat-option *ngFor="let language of languages" [value]="language.value">
-              {{language.viewValue}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="container-center">
-        <button mat-flat-button (click)='register()'>Register</button>
-      </div>
+            <mat-select placeholder="Language" formControlName="language">
+              <mat-option *ngFor="let language of languages" [value]="language.value">
+                {{language.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="container-center">
+          <button mat-flat-button (click)='register()'>Register</button>
+        </div>
   </form>
 </mat-card>

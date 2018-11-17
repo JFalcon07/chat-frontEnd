@@ -21,6 +21,7 @@ import {
   MatToolbarModule,
   MatCheckboxModule,
   MatBadgeModule,
+  MatExpansionModule,
 } from '@angular/material';
 import { AddModalComponent } from '../add-modal/add-modal.component';
 
@@ -46,6 +47,7 @@ import { AddModalComponent } from '../add-modal/add-modal.component';
     ScrollDispatchModule,
     MatCheckboxModule,
     MatBadgeModule,
+    MatExpansionModule,
   ],
   exports: [
     MatFormFieldModule,
@@ -67,6 +69,7 @@ import { AddModalComponent } from '../add-modal/add-modal.component';
     ScrollDispatchModule,
     MatCheckboxModule,
     MatBadgeModule,
+    MatExpansionModule,
   ],
   declarations: []
 })

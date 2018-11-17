@@ -2,9 +2,10 @@ import { HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Moment } from 'moment';
 
-interface User {
+export interface User {
     email: string;
     username: string;
+    language?: string;
 }
 
 const helper = new JwtHelperService();
@@ -22,12 +23,18 @@ export  const httpOptions = (() => {
 
 export const userInfo = {
     _id: undefined,
-    email: undefined
+    email: undefined,
+    username: undefined,
+    language: undefined
 };
 
-export function userSet(token: string) {
+export function tokenSet(token: string) {
     userInfo._id = helper.decodeToken(token).id;
     userInfo.email = helper.decodeToken(token).email;
+}
+export function setUser(username, language) {
+    userInfo.username = username;
+    userInfo.language = language;
 }
 
 export interface SimpleUser {
@@ -52,3 +59,13 @@ export function participants(users: SimpleUser[]): string {
     type: string;
     date: Moment;
 }
+
+export interface Language {
+    value: string;
+    viewValue: string;
+}
+
+export const languages: Language[] = [
+    {value: 'en', viewValue: 'English'},
+    {value: 'es', viewValue: 'Spanish'}
+];

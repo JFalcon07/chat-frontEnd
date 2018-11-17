@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { URL } from './config';
+import { StopPropagationDirective } from './stopPropagation';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { AppMaterialModule } from './app-material/app-material.module';
@@ -25,10 +26,11 @@ import { ConversationModalComponent } from './conversation-modal/conversation-mo
 
 const routes: Routes = [
   {path: '', redirectTo: 'chat', pathMatch: 'full'},
-  {path: 'chat', component: DashboardComponent, canActivate: [ LoginGuardService ]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'chat/:id', component: DashboardComponent, canActivate: [ LoginGuardService ]}
+  {path: 'chat', component: DashboardComponent, canActivate: [ LoginGuardService ]},
+  {path: 'chat/:id', component: DashboardComponent, canActivate: [ LoginGuardService ]},
+  {path: '**', redirectTo: 'chat'}
 ];
 
 
@@ -45,13 +47,14 @@ const routes: Routes = [
     ConversationModalComponent
   ],
   imports: [
-    RouterModule.forRoot(routes),
+    BrowserModule,
     BrowserAnimationsModule,
     AppMaterialModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    RouterModule.forRoot(routes),
   ],
   entryComponents: [AddModalComponent, ConversationModalComponent],
   providers: [

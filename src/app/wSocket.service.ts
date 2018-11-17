@@ -33,6 +33,56 @@ export class WebsocketService  {
     leaveRoom() {
         this.socket.emit('leave', null);
     }
+    removeContact(removeData) {
+        this.socket.emit('remove', removeData);
+    }
+    changePassword(change) {
+        this.socket.emit('changePassword', change);
+    }
+    changeUsername(change) {
+        this.socket.emit('changeUsername', change);
+    }
+    changeLanguage(change) {
+        this.socket.emit('changeLanguage', change);
+    }
+
+    PasswordChanged() {
+        const observable = new Observable(observer => {
+            this.socket.on('PasswordChanged', (changed) => {
+                observer.next(changed);
+            });
+            return () => this.socket.disconnect();
+        });
+        return observable;
+    }
+    UsernameChanged() {
+        const observable = new Observable(observer => {
+            this.socket.on('UsernameChanged', (changed) => {
+                observer.next(changed);
+            });
+            return () => this.socket.disconnect();
+        });
+        return observable;
+    }
+    LanguageChanged() {
+        const observable = new Observable(observer => {
+            this.socket.on('LanguageChanged', (changed) => {
+                observer.next(changed);
+            });
+            return () => this.socket.disconnect();
+        });
+        return observable;
+    }
+
+    removedContact() {
+        const observable = new Observable(observer => {
+            this.socket.on('removedContact', (contact) => {
+                observer.next(contact);
+            });
+            return () => this.socket.disconnect();
+        });
+        return observable;
+    }
 
     addedUser() {
         const observable = new Observable(observer => {

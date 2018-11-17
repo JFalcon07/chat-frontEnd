@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { userSet } from './config';
+import { tokenSet } from './config';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
   constructor(private cookieService: CookieService) {}
   ngOnInit() {
     if (this.cookieService.get('token')) {
-      userSet(this.cookieService.get('token'));
+      tokenSet(this.cookieService.get('token'));
     }
   }
 }
