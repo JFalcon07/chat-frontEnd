@@ -10,7 +10,7 @@ export interface User {
 
 const helper = new JwtHelperService();
 
-export const URL = 'http://localhost:3000';
+export const URL = 'http://192.168.99.100:3000';
 
 export  const httpOptions = (() => {
     const Options = {
@@ -67,5 +67,11 @@ export interface Language {
 
 export const languages: Language[] = [
     {value: 'en', viewValue: 'English'},
-    {value: 'es', viewValue: 'Spanish'}
+    {value: 'es', viewValue: 'Español'}
 ];
+
+export interface ChangeRes {
+    changed: boolean;
+    user?: string;
+    value: string;
+}

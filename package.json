@@ -23,9 +23,11 @@
     "@angular/platform-browser-dynamic": "^7.0.3",
     "@angular/router": "^7.0.3",
     "@auth0/angular-jwt": "^2.0.0",
+    "@ngx-translate/core": "^11.0.1",
+    "@ngx-translate/http-loader": "^4.0.0",
     "core-js": "^2.5.4",
     "ngx-cookie-service": "^1.0.10",
-    "rxjs": "~6.3.3",
+    "rxjs": "^6.3.3",
     "socket.io-client": "^2.1.1",
     "zone.js": "~0.8.26"
   },

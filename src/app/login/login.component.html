@@ -1,25 +1,26 @@
+<app-title-forms></app-title-forms>
 <mat-card class="card-container">
   <form class="form-container">
     <div class="inputform">
         <mat-form-field>
-          <input matInput placeholder="Email" [formControl]="emailFormControl" required>
+          <input matInput placeholder="{{'form.email' | translate}}" [formControl]="emailFormControl" required>
           <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-            Please enter a valid email address
+            {{'form.validEmail' | translate}}
           </mat-error>
           <mat-error *ngIf="emailFormControl.hasError('required')">
-            Email is <strong>required</strong>
+            {{'form.emailRequired' | translate}}
           </mat-error>
         </mat-form-field>
         <mat-form-field>
-          <input matInput type="password" placeholder="Password" [formControl]="passwordFormControl" required required>
+          <input matInput type="password" placeholder="{{'form.password' | translate}}" [formControl]="passwordFormControl" required required>
           <mat-error *ngIf="passwordFormControl.hasError('required')">
-            Password is <strong>required</strong>
+            {{'form.passwordRequired' | translate}}
           </mat-error>
         </mat-form-field>
       </div>
       <div class="container-center">
-      <a [routerLink]="['/register']" mat-button color="primary">Register</a>
-      <button mat-flat-button (click)="login()">Login</button>
+      <a [routerLink]="['/register']" mat-button color="primary">{{'form.register' | translate}}</a>
+      <button mat-flat-button (click)="login()" color="primary">{{'form.login' | translate}}</button>
       </div>
   </form>
 </mat-card>

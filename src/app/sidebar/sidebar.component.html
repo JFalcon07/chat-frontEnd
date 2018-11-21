@@ -1,5 +1,5 @@
         <div class="tabsButton">
-        <button mat-raised-button class="tabs" (click)="contactsChange()"><span *ngIf="!viewContacts">Conversations</span><span *ngIf="viewContacts">Contacts</span></button>
+        <button mat-raised-button class="tabs" (click)="contactsChange()"><span *ngIf="!viewContacts">{{'sidebar.conversations' | translate}}</span><span *ngIf="viewContacts">{{'sidebar.contacts' | translate}}</span></button>
         <button mat-raised-button class="add tabsButton" (click)="addContact()"><mat-icon>person_add</mat-icon></button>
         </div>
         <mat-nav-list *ngIf="!viewContacts">

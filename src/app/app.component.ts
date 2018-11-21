@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { tokenSet } from './config';
+import { tokenSet, userInfo } from './config';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
   title = 'chat';
   constructor(private cookieService: CookieService) {}
   ngOnInit() {
+    userInfo.language = 'en';
     if (this.cookieService.get('token')) {
       tokenSet(this.cookieService.get('token'));
     }

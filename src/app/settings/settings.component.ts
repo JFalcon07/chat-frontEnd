@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { userInfo, languages, Language, httpOptions } from '../config';
 import { CookieService } from 'ngx-cookie-service';
-import { WebsocketService } from '../wSocket.service';
-import { FormControl, Validators, ValidatorFn, AbstractControl, FormGroup } from '@angular/forms';
-import { passwordmatcher } from '../register/register.service';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 
-interface ChangeRes {
-  changed: boolean;
-  value: string;
-}
+import { passwordmatcher } from '../register/register.service';
+import { userInfo, languages, Language, ChangeRes} from '../config';
+import { WebsocketService } from '../wSocket.service';
 
 @Component({
   selector: 'app-settings',
@@ -30,8 +27,8 @@ export class SettingsComponent implements OnInit {
   constructor(
     private cookieService: CookieService,
     private webSocket: WebsocketService,
-    private SnackBar: MatSnackBar
-  ) {
+    private SnackBar: MatSnackBar,
+    private translate: TranslateService) {
     this.usernameForm = new FormControl ('', Validators.required);
     this.languageForm = new FormControl();
   }
@@ -45,24 +42,28 @@ export class SettingsComponent implements OnInit {
     this.webSocket.PasswordChanged()
     .subscribe((changeResponse: ChangeRes) => {
         if (changeResponse.changed) {
-          this.SnackBar.open('Password Changed', undefined, {
+          this.translate.get('messages.PasswordChanged').subscribe(value => {
+          this.SnackBar.open(value, undefined, {
             duration: 5000,
           });
-        }
+        });
+      }
       });
       this.webSocket.UsernameChanged()
       .subscribe((changeResponse: ChangeRes) => {
           if (changeResponse.changed) {
+            if (changeResponse.user !== userInfo._id) { return false; }
             this.username = changeResponse.value;
           }
-        });
-        this.webSocket.LanguageChanged()
-        .subscribe((changeResponse: ChangeRes) => {
-            if (changeResponse.changed) {
-              userInfo.language = changeResponse.value;
-              this.getLanguage();
-            }
-          });
+      });
+      this.webSocket.LanguageChanged()
+      .subscribe((changeResponse: ChangeRes) => {
+        if (changeResponse.changed) {
+          userInfo.language = changeResponse.value;
+          this.getLanguage();
+          this.translate.use(changeResponse.value);
+        }
+      });
     }
   getLanguage() {
     languages.forEach(element => {
@@ -82,17 +83,21 @@ export class SettingsComponent implements OnInit {
   }
   changePassword() {
     if (!this.passwordForm.valid) {
-      return this.SnackBar.open('Some information is invalid', undefined, {
+      return this.translate.get('messages.invalid').subscribe(value => {
+      this.SnackBar.open(value, undefined, {
         duration: 5000,
       });
+    });
     } else {
       this.webSocket.changePassword(this.createChange(this.passwordForm.controls.password.value));
     }
   }
   changeUsername() {
     if (!this.usernameForm.valid) {
-      return this.SnackBar.open('Some information is invalid', undefined, {
-        duration: 5000,
+      return this.translate.get('messages.invalid').subscribe(value => {
+        this.SnackBar.open(value, undefined, {
+          duration: 5000,
+        });
       });
     } else {
       this.webSocket.changeUsername(this.createChange(this.usernameForm.value));

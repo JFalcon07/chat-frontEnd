@@ -2,31 +2,31 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-            Change Password
+            {{'form.passwordTitle' | translate}}
         </mat-panel-title>
       </mat-expansion-panel-header>
       <form [formGroup]="passwordForm">
         <mat-form-field>
-          <input matInput formControlName="password" type="password" placeholder="Password">
+          <input matInput formControlName="password" type="password" placeholder="{{'form.newPassword' | translate}}">
           <mat-error *ngIf="f.password.hasError('required')">
-              Password is required
+              {{'form.passwordRequired' | translate}}
             </mat-error>
             <mat-error *ngIf="f.password.hasError('minlength')">
-                Password need to be a least 4 characters
+                {{'form.passwordLenght' | translate}}
             </mat-error>
         </mat-form-field>
         <br>
         <mat-form-field>
-            <input matInput type="password" placeholder="Confirm Password" formControlName="passwordConfirm" required>
+            <input matInput type="password" placeholder="{{'form.passwordConfirmation' | translate}}" formControlName="passwordConfirm" required>
             <mat-error *ngIf="f.passwordConfirm.hasError('required')">
-                Password confirmation is <strong>required</strong>
+                {{'form.confirmationRequired' | translate}}
             </mat-error>
             <mat-error *ngIf="passwordForm.hasError('noMatch') && !f.passwordConfirm.hasError('required')">
-              Password confirmation does not match
+                {{'form.confirmationNoMatch' | translate}}
             </mat-error>
         </mat-form-field>
         <br>
-        <button mat-raised-button color="primary" (click)="changePassword()" >Save</button>
+        <button mat-raised-button color="primary" (click)="changePassword()" >{{'generic.save' | translate}}</button>
       </form>
     </mat-expansion-panel>
     <mat-expansion-panel>
@@ -35,18 +35,18 @@
               {{username}}
           </mat-panel-title>
           <mat-panel-description>
-            Change username
+              {{'form.usernameDescription' | translate}}
           </mat-panel-description>
         </mat-expansion-panel-header>
         <form>
           <mat-form-field>
-            <input matInput [formControl]="usernameForm" placeholder="New Username">
+            <input matInput [formControl]="usernameForm" placeholder="{{'form.newUsername' | translate}}">
             <mat-error *ngIf="usernameForm.hasError('required')">
-                UserName is required
+                {{'form.UserNameRequired' | translate}}
               </mat-error>
           </mat-form-field>
           <br>
-          <button mat-raised-button color="primary" (click)="changeUsername()">Save</button>
+          <button mat-raised-button color="primary" (click)="changeUsername()">{{'generic.save' | translate}}</button>
         </form>
       </mat-expansion-panel>
       <mat-expansion-panel>
@@ -55,19 +55,19 @@
               {{language}}
           </mat-panel-title>
           <mat-panel-description>
-            Change language
+              {{'form.languageDescription' | translate}}
           </mat-panel-description>
           </mat-expansion-panel-header>
           <form>
             <mat-form-field>
-                <mat-select placeholder="Language" [formControl]="languageForm">
+                <mat-select placeholder="{{'form.language' | translate}}" [formControl]="languageForm">
                   <mat-option *ngFor="let language of languages" [value]="language.value">
                     {{language.viewValue}}
                   </mat-option>
                 </mat-select>
             </mat-form-field>
             <br>
-            <button mat-raised-button color="primary" (click)="newLanguage()">Save</button>
+            <button mat-raised-button color="primary" (click)="newLanguage()">{{'generic.save' | translate}}</button>
           </form>
     </mat-expansion-panel>
     </mat-accordion>

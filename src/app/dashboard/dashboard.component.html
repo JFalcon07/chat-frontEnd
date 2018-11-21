@@ -6,8 +6,8 @@
     <button mat-icon-button class="user-avatar" [matMenuTriggerFor]="options">
       <img src="../../assets/User.png" alt="User picture" width="70px" >
       <mat-menu #options="matMenu">
-          <a (click)="settings=true" mat-menu-item>Settings</a>
-          <a (click)="logout()" [routerLink]="['/login']" mat-menu-item>Logout</a>
+          <a (click)="settings=true" mat-menu-item>{{'dashboard.settings' | translate}}</a>
+          <a (click)="logout()" [routerLink]="['/login']" mat-menu-item>{{'dashboard.logOut' | translate}}</a>
       </mat-menu>
     </button>
   </div>
@@ -17,7 +17,7 @@
     <div *ngSwitchCase="true" class="dashboard-container">
         <mat-card class="card-container settings">
           <app-settings></app-settings>
-          <button mat-flat-button color="primary"  class="return" (click)='settings=false'>Return</button>
+          <button mat-flat-button color="primary"  class="return" (click)='settings=false'>{{'dashboard.return' | translate}}</button>
         </mat-card>
       </div>
 

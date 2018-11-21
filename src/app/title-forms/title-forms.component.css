@@ -1,0 +1,10 @@
+.title-Forms {
+    margin-bottom: 50px;
+    position: relative;
+    text-align: center;
+}
+.language-Select {
+    position: absolute;
+    right: 15px;
+    top: 10%;
+}

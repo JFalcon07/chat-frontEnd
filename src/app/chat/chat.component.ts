@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@ang
 import { DashboardService } from '../dashboard/dashboard.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { httpOptions, userInfo, URL, SimpleUser, participants, Message} from '../config';
+import { httpOptions, userInfo, URL, SimpleUser, participants, Message, ChangeRes} from '../config';
 import { WebsocketService } from '../wSocket.service';
 import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
@@ -25,7 +25,7 @@ interface ConversationsResponse {
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit, AfterViewChecked {
+export class ChatComponent implements OnInit, AfterViewChecked  {
   @ViewChild('scroll', {read: ElementRef}) private myScrollContainer: ElementRef;
   conversation;
   participants: SimpleUser[];
@@ -41,28 +41,31 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     this.user = userInfo._id;
   }
 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
   async ngOnInit() {
-    await this.data.currentConversation.subscribe(async (conversation: Conversation) => {
+    this.data.currentConversation.subscribe(async (conversation: Conversation) => {
       this.conversation = conversation;
       if (this.conversation) {
         this.messageControl.setValue('');
         await this.getMessages(conversation._id);
       }
     });
-
-  }
-
-  ngAfterViewChecked() {
-    this.scrollToBottom();
     this.webSocket.messageRecieved()
     .subscribe((msg: Message) => {
       if (msg.room !== this.conversation) { return false; }
       msg.user = getUsername(this.participants, msg.sender);
-      msg.date = moment(msg.date);
+      msg.date = moment(msg.date).locale(userInfo.language);
       this.messages.push(msg);
-      this.scrollToBottom();
     });
-    this.scrollToBottom();
+    this.webSocket.UsernameChanged()
+    .subscribe((changeResponse: ChangeRes) => {
+        if (changeResponse.changed) {
+          this.userChange(changeResponse.user, changeResponse.value);
+        }
+    });
   }
 
   getMessages(id: string) {
@@ -73,14 +76,14 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     })};
     Options.headers.append('Access-Control-Allow-Origin', '*');
     Options.headers.append('Access-Control-Allow-Headers', '*');
-    this.http.get(URL + '/conversation/' + this.conversation, Options)
+    this.http.get(URL + '/api/conversation/' + this.conversation, Options)
     .subscribe((Response: ConversationsResponse) => {
       if (!Response.conversation) { return this.router.navigate(['/chat']); }
       this.participants = Response.conversation.participants;
       this.others = participants(Response.conversation.participants);
       Response.conversation.messages.forEach((elem) => {
         elem.user = getUsername(this.participants, elem.sender);
-        elem.date = moment(elem.date);
+        elem.date = moment(elem.date).locale(userInfo.language);
       });
       this.messages = Response.conversation.messages;
     });
@@ -99,6 +102,16 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     this.messageControl.setValue('');
     this.webSocket.sendMessage(messageData);
   }
+
+  userChange(id: string, change) {
+    if (id === userInfo._id) {return false; }
+      this.participants.forEach(element => {
+        if (element._id === id) {
+          this.others = change;
+        }
+      });
+  }
+
   scrollToBottom(): void {
     try {
         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;

@@ -1,0 +1,56 @@
+{
+    "generic": {
+        "cancel": "Cancelar",
+        "add": "Aceptar",
+        "save": "Guardar"
+    },
+    "dashboard": {
+        "settings": "Ajustes",
+        "logOut": "Cerrar sesion",
+        "return": "Regresar"
+    },
+    "sidebar": {
+        "conversations": "Conversaciones",
+        "contacts": "Contactos"
+    },
+    "addModal": {
+        "title": "Anadir contacto",
+        "searchLabel": "Buscar usuario",
+        "search": "Buscar"
+    },
+    "newConversation": {
+        "title": "Crear nueva conversacion de grupo",
+        "contactsLabel": "Contactos"
+    },
+    "form": {
+        "passwordTitle": "Cambiar Contraseña",
+        "password": "Contraseña",
+        "newPassword": "Nueva contraseña",
+        "passwordRequired": "La contraseña es requerida",
+        "passwordLenght": "La contraseña debe ser de al menos 4 characteres",
+        "passwordConfirmation": "Confirmar contraseña",
+        "confirmationRequired": "La confirmacion de contraseña es requerida",
+        "confirmationNoMatch": "Las contraseñas no coinciden",
+        "username": "Nombre de usuario",
+        "newUsername": "Nuevo nombre de usuario",
+        "usernameDescription": "Cambiar nombre de usuario",
+        "UserNameRequired": "Nombre de usuario es requerido",
+        "language": "Lenguaje",
+        "languageDescription": "Cambiar lenguage",
+        "email": "Correo",
+        "validEmail": "Por favor ingrese un correo valido",
+        "emailRequired": "El correo es requerido",
+        "login": "Iniciar sesión",
+        "register": "Registro"
+    },
+    "chat": {
+        "messageLabel": "Mensaje",
+        "send": "Enviar"
+    },
+    "messages": {
+        "selectUser": "Por favor seleciona o busca un usuario",
+        "PasswordChanged": "La contraseña se ha cambiado",
+        "invalid": "Alguna información es inválida",
+        "selectMany": "Por favor seleciona más de un usuario"
+    }
+}

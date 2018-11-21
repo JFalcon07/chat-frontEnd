@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
     });
   }
   loginRequest(obj) {
-    return this.http.post(URL + '/login', JSON.stringify(obj), httpOptions)
+    return this.http.post(URL + '/api/login', JSON.stringify(obj), httpOptions)
     .subscribe((data: Data) => {
       this.openSnackBar(data.message);
       if (data.login) {

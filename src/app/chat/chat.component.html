@@ -2,7 +2,7 @@
     <mat-toolbar role="heading" color="primary">
           {{others}}
   </mat-toolbar>
-  <div  class="chat-container" aria-orientation="vertical" #scroll>
+  <div class="chat-container" aria-orientation="vertical" #scroll>
       <div *ngFor="let message of messages" [ngClass]="message.sender === user ? 'host-message message': 'other-message message'">
         <div class="message-info">
             <mat-card-subtitle class="userName">{{message.user}}</mat-card-subtitle>
@@ -15,8 +15,8 @@
   </div>
   <div class="message-input-container">
     <mat-form-field class="message-input">
-      <input  matInput placeholder="Message" (keyup.enter)="send()" [formControl]="messageControl" #message>
+      <input  matInput placeholder="{{'chat.messageLabel' | translate}}" (keyup.enter)="send()" [formControl]="messageControl">
     </mat-form-field >
-    <button mat-raised-button color="primary" class="message-send" (click)="send(message.value)">Send</button>
+    <button mat-raised-button color="primary" class="message-send" (click)="send()">{{'chat.send' | translate}}</button>
   </div>
 </mat-card-content>

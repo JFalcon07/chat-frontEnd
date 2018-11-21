@@ -40,3 +40,8 @@ export interface Data {
     signup: boolean;
     message: string;
 }
+export function defaultLanguage(value?: string) {
+    if (value) { return value; }
+    if (navigator.language) { return navigator.language; }
+    return 'en';
+}

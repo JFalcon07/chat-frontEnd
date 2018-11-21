@@ -9,10 +9,9 @@ import { userInfo } from './config';
 export class WebsocketService  {
     private socket;
     constructor() {
-
+        this.socket = io(URL);
      }
     connect() {
-        this.socket = io(URL);
         this.socket.emit('linkUser', userInfo._id);
     }
 
@@ -44,6 +43,16 @@ export class WebsocketService  {
     }
     changeLanguage(change) {
         this.socket.emit('changeLanguage', change);
+    }
+
+    messageRecieved() {
+        const observable = new Observable<Message>(observer => {
+            this.socket.on('messageRecieved', (msg) => {
+                observer.next(msg);
+            });
+            return () => this.socket.disconnect();
+        });
+        return observable;
     }
 
     PasswordChanged() {
@@ -108,16 +117,6 @@ export class WebsocketService  {
         const observable = new Observable(observer => {
             this.socket.on('joined', (data) => {
                 observer.next(data);
-            });
-            return () => this.socket.disconnect();
-        });
-        return observable;
-    }
-
-    messageRecieved() {
-        const observable = new Observable<Message>(observer => {
-            this.socket.on('message', (msg) => {
-                observer.next(msg);
             });
             return () => this.socket.disconnect();
         });

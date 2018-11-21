@@ -1,0 +1,56 @@
+{
+    "generic": {
+        "cancel": "Cancel",
+        "add": "Add",
+        "save": "Save"
+    },
+    "dashboard": {
+        "settings": "Settings",
+        "logOut": "Logout",
+        "return": "Return"
+    },
+    "sidebar": {
+        "conversations": "Conversations",
+        "contacts": "Contacts"
+    },
+    "addModal": {
+        "title": "Add Contact",
+        "searchLabel": "Search user",
+        "search": "Search"
+    },
+    "newConversation": {
+        "title": "Create new group Conversation",
+        "contactsLabel": "Contacts"
+    },
+    "form": {
+        "passwordTitle": "Change Password",
+        "password": "Password",
+        "newPassword": "New Password",
+        "passwordRequired": "Password is required",
+        "passwordLenght": "Password should have at least 4 characters",
+        "passwordConfirmation": "Confirm Password",
+        "confirmationRequired": "Password Confirmations is Required",
+        "confirmationNoMatch": "Passwords don't match",
+        "username": "Username",
+        "newUsername": "New username",
+        "usernameDescription": "Change username",
+        "UserNameRequired": "Username is required",
+        "language": "Language",
+        "languageDescription": "Change Language",
+        "email": "Email",
+        "validEmail": "Please enter a valid email address",
+        "emailRequired": "Email is required",
+        "login": "Login",
+        "register": "Register"
+    },
+    "chat": {
+        "messageLabel": "Message",
+        "send": "Send"
+    },
+    "messages": {
+        "selectUser": "Please select or search an user",
+        "PasswordChanged": "Password Changed",
+        "invalid": "Some information is invalid",
+        "selectMany": "Please select more than one user"
+    }
+}

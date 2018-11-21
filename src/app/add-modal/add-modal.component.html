@@ -1,11 +1,11 @@
 <div class="modal-container">
-  <h1 mat-dialog-title>Add contact</h1>
+  <h1 mat-dialog-title>{{'addModal.title' | translate}}</h1>
   <div mat-dialog-content>
-    <p>Search user</p>
+    <p>{{'addModal.searchLabel' | translate}}</p>
     <mat-form-field>
       <input matInput type="text" [formControl]="search" cdkFocusInitial>
     </mat-form-field>
-    <button mat-button  (click)="getUsers(search.value)" >Search</button>
+    <button mat-button  (click)="getUsers(search.value)" >{{'addModal.search' | translate}}</button>
     <p *ngIf="found === false"> No user was found</p>
     <mat-radio-group class="user-list" *ngIf="users" [(ngModel)]="selectedUser">
         <mat-radio-button *ngFor="let user of users" class="user-list-item" [value]="user.email">
@@ -14,7 +14,7 @@
     </mat-radio-group>
   </div>
   <div mat-dialog-actions class="modal-buttons">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button (click)="addUser(selectedUser)" >Add</button>
+    <button mat-button mat-dialog-close>{{'generic.cancel' | translate}}</button>
+    <button mat-button (click)="addUser(selectedUser)" >{{'generic.add' | translate}}</button>
   </div>
 </div>

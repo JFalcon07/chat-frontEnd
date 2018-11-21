@@ -1,11 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { CookieService } from 'ngx-cookie-service';
-import { URL } from './config';
-import { StopPropagationDirective } from './stopPropagation';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { AppMaterialModule } from './app-material/app-material.module';
@@ -23,6 +23,7 @@ import { Logged } from './login/login.service';
 import { LoginGuardService } from './login-guard.service';
 import { WebsocketService } from './wSocket.service';
 import { ConversationModalComponent } from './conversation-modal/conversation-modal.component';
+import { TitleFormsComponent } from './title-forms/title-forms.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'chat', pathMatch: 'full'},
@@ -44,7 +45,8 @@ const routes: Routes = [
     ChatComponent,
     SettingsComponent,
     AddModalComponent,
-    ConversationModalComponent
+    ConversationModalComponent,
+    TitleFormsComponent
   ],
   imports: [
     BrowserModule,
@@ -55,6 +57,13 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     RouterModule.forRoot(routes),
+    TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+      }
+  })
   ],
   entryComponents: [AddModalComponent, ConversationModalComponent],
   providers: [
@@ -63,7 +72,12 @@ const routes: Routes = [
     Logged,
     LoginGuardService,
     WebsocketService,
+    { provide: LOCALE_ID, useValue: 'fr' },
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}

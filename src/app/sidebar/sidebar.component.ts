@@ -4,7 +4,7 @@ import { AddModalComponent } from '../add-modal/add-modal.component';
 import { ConversationModalComponent } from '../conversation-modal/conversation-modal.component';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { httpOptions, userInfo, URL, SimpleUser, participants, Message, User} from '../config';
+import { httpOptions, userInfo, URL, SimpleUser, participants, Message, ChangeRes} from '../config';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { WebsocketService } from '../wSocket.service';
 import { Router } from '@angular/router';
@@ -57,60 +57,83 @@ export class SidebarComponent implements OnInit {
     }
 
   async ngOnInit() {
-    await this.getContacts();
-    await this.getConversations();
-    this.webSocket.connect();
-    this.data.currentConversation.subscribe((conversation: Conversation) => {
-      this.conversation = conversation;
-    });
-    this.webSocket.messageRecieved()
-    .subscribe((message: Message) => {
-      if (message.room === this.conversation) { return false; }
-      this.conversations.forEach((conv: Conversation) => {
-        if (message.room === conv._id) {
-          conv.notRead++;
-        }
-      });
-    });
-    this.webSocket.addedUser()
-    .subscribe((conversation: Conversation) => {
-      if (conversation.participants) {
-      this.getContacts();
-      conversation = this.configConversations(conversation);
-      this.conversations.push(conversation);
-      return this.dialog.closeAll();
-      }
-      return this.snackBar.open(conversation.message, undefined, {
-        duration: 2000,
-      });
-    });
-    this.webSocket.newConversation()
-    .subscribe((newconversation: NewConversation) => {
-      if (newconversation.added) {
-        newconversation.conversation = this.configConversations(newconversation.conversation);
-        this.conversations.push(newconversation.conversation);
-        return this.dialog.closeAll();
-      }
-    });
-    this.webSocket.online()
-    .subscribe((id: string) => {
-      this.online(id);
-    });
-    this.webSocket.offline()
-    .subscribe((id: string) => {
-      this.conversations.forEach((conv: Conversation) => {
-        if (conv.participants.length > 2) { return false; }
-        const disconectedUser = conv.participants.filter(user => user._id === id)[0];
-        if (!disconectedUser) { return false; }
-        conv.online = false;
-      });
-    });
-    this.webSocket.removedContact()
-    .subscribe((removedContent: RemovedContent) => {
-      this.conversations = this.conversations.filter((element: Conversation) => (element._id !== removedContent.conversation));
-      this.contacts = this.contacts.filter((element: SimpleUser) => (element._id !== removedContent.user));
-      if (this.conversation === removedContent.conversation) {
-        this.router.navigate(['/chat']);
+    this.getContacts();
+    this.getConversations()
+      .subscribe((response: ConversationsResponse) => {
+        if (response.authorized) {
+          if (response.conversations.length > 0) {
+            response.conversations.forEach( element => {
+              element = this.configConversations(element);
+            });
+          this.conversations = response.conversations;
+          }
+        this.data.currentConversation.subscribe((conversation: Conversation) => {
+          this.conversation = conversation;
+        });
+
+        this.webSocket.messageRecieved()
+        .subscribe((message: Message) => {
+          if (message.room === this.conversation) { return false; }
+          this.conversations.forEach((conv: Conversation) => {
+            if (message.room === conv._id) {
+              conv.notRead++;
+            }
+          });
+        });
+
+        this.webSocket.addedUser()
+        .subscribe((conversation: Conversation) => {
+          if (conversation.participants) {
+          this.getContacts();
+          conversation = this.configConversations(conversation);
+          this.conversations.push(conversation);
+          return this.dialog.closeAll();
+          }
+          return this.snackBar.open(conversation.message, undefined, {
+            duration: 2000,
+          });
+        });
+
+        this.webSocket.newConversation()
+        .subscribe((newconversation: NewConversation) => {
+          if (newconversation.added) {
+            newconversation.conversation = this.configConversations(newconversation.conversation);
+            this.conversations.push(newconversation.conversation);
+            return this.dialog.closeAll();
+          }
+        });
+
+        this.webSocket.online()
+        .subscribe((id: string) => {
+          this.online(id);
+        });
+
+        this.webSocket.offline()
+        .subscribe((id: string) => {
+          this.conversations.forEach((conv: Conversation) => {
+            if (conv.participants.length > 2) { return false; }
+            const disconectedUser = conv.participants.filter(user => user._id === id)[0];
+            if (!disconectedUser) { return false; }
+            conv.online = false;
+          });
+        });
+
+        this.webSocket.removedContact()
+        .subscribe((removedContent: RemovedContent) => {
+          this.conversations = this.conversations.filter((element: Conversation) => (element._id !== removedContent.conversation));
+          this.contacts = this.contacts.filter((element: SimpleUser) => (element._id !== removedContent.user));
+          if (this.conversation === removedContent.conversation) {
+            this.router.navigate(['/chat']);
+          }
+        });
+
+        this.webSocket.UsernameChanged()
+        .subscribe((changeResponse: ChangeRes) => {
+            if (changeResponse.changed) {
+              this.userChange(changeResponse.user, changeResponse.value);
+            }
+        });
+        this.webSocket.connect();
       }
     });
   }
@@ -125,17 +148,7 @@ export class SidebarComponent implements OnInit {
       token: this.cookieService.get('token'),
       _id: userInfo._id
     };
-     return this.http.post(URL + '/Conversations', JSON.stringify(data), httpOptions)
-    .subscribe((response: ConversationsResponse) => {
-      if (response.authorized) {
-        if (response.conversations.length > 0) {
-          response.conversations.forEach( element => {
-            element = this.configConversations(element);
-          });
-         return this.conversations = response.conversations;
-        }
-    }
-    });
+     return this.http.post(URL + '/api/Conversations', JSON.stringify(data), httpOptions);
   }
   newConversation() {
     this.dialog.open(ConversationModalComponent, {
@@ -169,12 +182,25 @@ export class SidebarComponent implements OnInit {
        conv.online = true;
     });
   }
+
+  userChange(id: string, change) {
+    if (id === userInfo._id) {return false; }
+    this.conversations.forEach((conv: Conversation) => {
+      conv.participants.forEach( element => {
+        if (element._id === id) {
+          element.username = change;
+        }
+        conv.sending = participants(conv.participants);
+      });
+    });
+  }
+
   getContacts() {
     const data = {
       token: this.cookieService.get('token'),
       email: userInfo.email
     };
-    this.http.post(URL + '/contacts', JSON.stringify(data), httpOptions)
+    this.http.post(URL + '/api/contacts', JSON.stringify(data), httpOptions)
     .subscribe((response: UsersResponse) => {
       if (response.authorized) {
         if (response.contacts.length > 0) {

@@ -1,0 +1,10 @@
+<mat-card class="title-Forms">
+<h1>Some random chat</h1>
+  <mat-form-field class="language-Select">
+    <mat-select placeholder="{{'form.language' | translate}}" [formControl]="language" (ngModelChange)="changeLanguage()">
+      <mat-option *ngFor="let language of languages" [value]="language.value">
+        {{language.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-card>
